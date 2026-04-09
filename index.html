@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Branding Canvas — Lost In The Sauce</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --maroon:#6b1d2a;
+  --dark-brown:#2e1a11;
+  --deep:#1a0e08;
+  --warm:#3d2013;
+  --cream:#f2e8da;
+  --cream-dim:#d4c4ae;
+  --accent:#a63446;
+  --gold:#c9923e;
+  --border:rgba(201,146,62,.18);
+}
+body{background:var(--deep);color:var(--cream);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+header{display:flex;align-items:baseline;justify-content:space-between;padding:1.2rem 2rem;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:.8rem;background:linear-gradient(180deg,rgba(61,32,19,.5),transparent)}
+header h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.2rem,2.8vw,1.8rem)}
+.hchips{display:flex;gap:.8rem;flex-wrap:wrap}
+.hchip{background:var(--warm);border:1px solid var(--border);border-radius:5px;padding:.35rem .9rem;font-size:.72rem}
+.hchip b{color:var(--accent);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.1rem;font-weight:600}
+
+.canvas-wrap{max-width:1300px;margin:0 auto;border:1px solid var(--border);border-top:none}
+.main-row{display:grid;grid-template-columns:58% 42%}
+
+/* LEFT */
+.left{position:relative;min-height:580px;display:flex;align-items:center;justify-content:center;padding:2.5rem 2rem;border-right:1px solid var(--border);overflow:visible}
+.circle-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.circle-bg svg{width:88%;max-width:490px;aspect-ratio:1}
+
+/* Clickable labels */
+.clbl{position:absolute;cursor:pointer;z-index:2;transition:color .2s}
+.clbl:hover .clbl-title{color:var(--gold)}
+.clbl-head{display:flex;align-items:center;gap:.4rem}
+.clbl-icon{width:24px;height:24px;border-radius:6px;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+.clbl-title{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(.65rem,1.05vw,.82rem);letter-spacing:.02em;transition:color .2s}
+.clbl-sub{font-size:.55rem;color:var(--cream-dim);font-weight:300;opacity:.7;margin-left:calc(24px + .4rem)}
+.clbl-arrow{font-size:.55rem;color:var(--gold);transition:transform .3s;display:inline-block;margin-left:.3rem}
+.clbl.open .clbl-arrow{transform:rotate(180deg)}
+
+/* Inline dropdown for circle labels */
+.clbl-body{
+  margin-top:.5rem;margin-left:calc(24px + .4rem);
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s;
+  font-size:.75rem;line-height:1.65;color:var(--cream-dim);font-weight:300;
+  width:clamp(180px,22vw,260px);
+  padding:.6rem .7rem;padding-top:0;
+  background:var(--deep);border-radius:8px;position:relative;z-index:20;
+}
+.clbl.open .clbl-body{padding-top:.6rem}
+.clbl.open .clbl-body{max-height:400px;opacity:1}
+.clbl.open{z-index:30}
+
+.clbl-competence{top:10%;left:26%}
+.clbl-identity{top:42%;left:3%}
+.clbl-profession{top:42%;right:6%;text-align:left}
+.clbl-profession .clbl-body{margin-left:0;margin-right:calc(24px + .4rem)}
+.clbl-reasons{bottom:12%;left:14%}
+.clbl-arena{top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.clbl-arena .clbl-body{margin-left:auto;margin-right:auto;text-align:left;width:clamp(160px,18vw,220px)}
+.clbl-arena .clbl-sub{margin-left:0}
+
+/* RIGHT */
+.right{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr auto}
+.cell{border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:1.1rem;cursor:pointer;transition:background .25s}
+.cell:hover{background:rgba(201,146,62,.04)}
+.cell.active{background:rgba(201,146,62,.06)}
+.cell-head{display:flex;align-items:center;gap:.4rem}
+.cell-icon{width:22px;height:22px;border-radius:5px;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0}
+.cell-t{font-family:'Playfair Display',serif;font-weight:700;font-size:.8rem}
+.cell-s{font-size:.55rem;color:var(--cream-dim);opacity:.6;font-weight:300;margin-left:calc(22px + .4rem);margin-bottom:.2rem}
+.cell-hint{font-size:.55rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;font-weight:500;opacity:.7;margin-top:.25rem;margin-left:calc(22px + .4rem)}
+.cell-hint .arr{display:inline-block;transition:transform .3s}
+.cell.active .cell-hint .arr{transform:rotate(180deg)}
+.cell-body{font-size:.76rem;line-height:1.65;color:var(--cream-dim);font-weight:300;max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s,margin .3s;margin-top:0;margin-left:calc(22px + .4rem)}
+.cell.active .cell-body{max-height:500px;opacity:1;margin-top:.5rem}
+
+.comp-row{grid-column:1/-1;text-align:center;padding-top:1rem}
+.comp-circle{width:68px;height:68px;border-radius:50%;border:1px solid var(--border);margin:0 auto .3rem;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:600;letter-spacing:.04em;color:var(--cream-dim)}
+.comp-row .cell-body{text-align:left;margin-left:1rem}
+.comp-row .cell-hint{margin-left:0}
+
+.bottom-row{display:grid;grid-template-columns:58% 42%;border-top:1px solid var(--border)}
+.bottom-row .cell{border-left:none}
+.bottom-row .cell+.cell{border-left:1px solid var(--border)}
+
+footer{text-align:center;padding:1.2rem;font-size:.6rem;color:rgba(212,196,174,.2);letter-spacing:.05em;border-top:1px solid var(--border);max-width:1300px;margin:0 auto}
+
+@media(max-width:900px){
+  .main-row{grid-template-columns:1fr}
+  .left{border-right:none;border-bottom:1px solid var(--border);min-height:450px}
+  .bottom-row{grid-template-columns:1fr 1fr}
+  .clbl-body{width:clamp(160px,50vw,280px)}
+}
+@media(max-width:550px){
+  .right{grid-template-columns:1fr}
+  .cell{border-left:none!important}
+  .bottom-row{grid-template-columns:1fr}
+  .bottom-row .cell+.cell{border-left:none;border-top:1px solid var(--border)}
+  header{padding:1rem}
+  .left{min-height:400px;padding:2rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<header>
+  <h1>THE PERSONAL BRANDING CANVAS</h1>
+  <div class="hchips">
+    <div class="hchip"><b>Name</b>Krasen — Founder of "Lost In The Sauce"</div>
+    <div class="hchip"><b>Goal</b>Sofia's first Chamorro-identified restaurant</div>
+  </div>
+</header>
+
+<div class="canvas-wrap">
+<div class="main-row">
+
+  <div class="left">
+    <div class="circle-bg">
+      <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="250" cy="250" r="240" stroke="rgba(201,146,62,.18)" stroke-width="1"/>
+        <circle cx="250" cy="250" r="168" stroke="rgba(201,146,62,.18)" stroke-width="1"/>
+        <circle cx="250" cy="250" r="82" stroke="rgba(201,146,62,.18)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="clbl clbl-competence" onclick="toggleLabel(this)">
+      <div class="clbl-head"><div class="clbl-icon">⚙️</div><div class="clbl-title">COMPETENCE <span class="clbl-arrow">▾</span></div></div>
+      <div class="clbl-sub">(What you can do)</div>
+      <div class="clbl-body">I am only at the very most a Chef de Partie. I cannot manage a whole kitchen for myself nor do I have the guts to right now. However, my recipes from my family and some traditional cookbooks not available to be purchased here in Sofia will really help kick things off since I know techniques others here don't really have any idea about.</div>
+    </div>
+
+    <div class="clbl clbl-identity" onclick="toggleLabel(this)">
+      <div class="clbl-head"><div class="clbl-icon">🧬</div><div class="clbl-title">IDENTITY <span class="clbl-arrow">▾</span></div></div>
+      <div class="clbl-sub">(Who you are)</div>
+      <div class="clbl-body">I am a Chamorro-Bulgarian mixed kid. I was raised primarily in Guam but I have a lot of experience with my Bulgarian side of my family. My palette was always so used to strong island flavors, with things I'm sure many Bulgarians have no comprehension on. I never really liked how Bulgarian food seemed so simple to me, and me and my father seeked different ways on how to bring these traditional foods to the island type life. I have more experience working in Guam, with soon-to-be experience at Talents or elsewhere for my 2nd semester.</div>
+    </div>
+
+    <div class="clbl clbl-profession" onclick="toggleLabel(this)">
+      <div class="clbl-head"><div class="clbl-icon">📋</div><div class="clbl-title">PROFESSION <span class="clbl-arrow">▾</span></div></div>
+      <div class="clbl-sub">(What you do & how)</div>
+      <div class="clbl-body">I am a culinary student at HRC Academy. As a hobby I create YouTube videos, music production, animation, and vibe-coded software. Cooking would not be my strongest suit but would be the best profession for me in the long-term, which is why I want to master it.</div>
+    </div>
+
+    <div class="clbl clbl-reasons" onclick="toggleLabel(this)">
+      <div class="clbl-head"><div class="clbl-icon">✅</div><div class="clbl-title">REASONS TO BELIEVE <span class="clbl-arrow">▾</span></div></div>
+      <div class="clbl-sub">(Why you are credible)</div>
+      <div class="clbl-body">My authenticity is unmatched. I have both sides of my family as well as that sort of experience, present and future. I have a high pursuit of the culinary field and I feel that it's destined for me. I've tried every asian restaurant here too and I could really only like two of them, one of them still being okay for the most part. I have every opportunity just waiting to be taken by me.</div>
+    </div>
+
+    <div class="clbl clbl-arena" onclick="toggleLabel(this)">
+      <div class="clbl-head" style="justify-content:center"><div class="clbl-icon">📍</div><div class="clbl-title">ARENA <span class="clbl-arrow">▾</span></div></div>
+      <div class="clbl-body">I want to get into the Sofia food scene, especially in Graf Ignatiev. No documentation mentions it, but I often see many young people walking by and having their events in this area and have their own shops bundled in here. No real pacific island restaurants live here let alone in any of the surrounding areas, so something like this would be highly intriguing for anyone.</div>
+    </div>
+  </div>
+
+  <div class="right">
+
+    <div class="cell" onclick="toggleCell(this)">
+      <div class="cell-head"><div class="cell-icon">🎯</div><div class="cell-t">POSITIONING</div></div>
+      <div class="cell-s">(Why you)</div>
+      <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+      <div class="cell-body">The answer is simple: It's niche. Nobody has the authenticity in levels that I have.</div>
+    </div>
+
+    <div class="cell" onclick="toggleCell(this)" style="border-left:1px solid var(--border)">
+      <div class="cell-head"><div class="cell-icon">🎁</div><div class="cell-t">PROMISE</div></div>
+      <div class="cell-s">(So what?)</div>
+      <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+      <div class="cell-body">Nobody knows how any of the islands' palettes taste. Not even Filipino, not even Taiwanese. Getting these things here would bring a lot of intrigue and a lot of recognition, and I would be able to make things only I could ever know.</div>
+    </div>
+
+    <div class="cell" onclick="toggleCell(this)">
+      <div class="cell-head"><div class="cell-icon">📣</div><div class="cell-t">COMMUNICATION</div></div>
+      <div class="cell-s">(How they know you)</div>
+      <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+      <div class="cell-body">Social media branding like on Instagram, TikTok and Facebook is key to get my restaurant out there. But also, word of mouth. You might be impressed with a little social media ad but have a friend relay that to you and it's a different story. It's a different sense of trust you get from a peer that you would not get from an ad you'd scroll anyway.</div>
+    </div>
+
+    <div class="cell" onclick="toggleCell(this)" style="border-left:1px solid var(--border)">
+      <div class="cell-head"><div class="cell-icon">👥</div><div class="cell-t">AUDIENCE</div></div>
+      <div class="cell-s">(Who needs to know)</div>
+      <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+      <div class="cell-body">Young Sofia kids and college kids (17–35) and the adventurous crowd in Graf Ignatiev, as well as expats, tourists, and Instagram/TikTok crowds dying to get their island fixes, especially expats in the surrounding countries.</div>
+    </div>
+
+    <div class="cell comp-row" onclick="toggleCell(this)">
+      <div class="comp-circle"><span style="font-size:.7rem">⚔️</span><br>COMPETITORS</div>
+      <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+      <div class="cell-body">There are some asian restaurants around here, but like I said, a lot of them are pretty terrible. Only one that I've had is really good and even then, they're located far away from where I wanna go. There are some trendy street food shops that probably popped around but pop-ups might have no match for my full-time restaurant. I'm dependable.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bottom-row">
+  <div class="cell" onclick="toggleCell(this)">
+    <div class="cell-head"><div class="cell-icon">💰</div><div class="cell-t">INVESTMENTS</div></div>
+    <div class="cell-s">(What you need)</div>
+    <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+    <div class="cell-body">I need to spend and dedicate my time to curating and developing my craft and skill in the kitchen. After I even get all this, my time sourcing and looking for alternatives for ingredients is tough. Investing in something like that could be expensive, BUT I can't just cut every corner because that makes my food so easily repeatable. I need things that others can't ever think of getting or figuring out. Branding and social media is my thing, but I know people who can help with that aspect too so I can master the kitchen.</div>
+  </div>
+  <div class="cell" onclick="toggleCell(this)">
+    <div class="cell-head"><div class="cell-icon">🏆</div><div class="cell-t">RESULTS</div></div>
+    <div class="cell-s">(What you get)</div>
+    <div class="cell-hint">Tap to read <span class="arr">▾</span></div>
+    <div class="cell-body">The biggest and trendiest foodie place in all of Sofia, capturing a niche yet diverse option with an island-life 20 min away from you.</div>
+  </div>
+</div>
+</div>
+
+<footer>Personal Branding Canvas — Krasen / Lost In The Sauce — 2026</footer>
+
+<script>
+function toggleLabel(el){
+  const was=el.classList.contains('open');
+  document.querySelectorAll('.clbl.open').forEach(c=>c.classList.remove('open'));
+  if(!was)el.classList.add('open');
+}
+function toggleCell(el){
+  const was=el.classList.contains('active');
+  document.querySelectorAll('.cell.active').forEach(c=>c.classList.remove('active'));
+  if(!was)el.classList.add('active');
+}
+</script>
+</body>
+</html>
